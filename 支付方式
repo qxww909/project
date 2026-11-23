@@ -1,0 +1,22 @@
+def process_payment(payment_method, amount):
+    """
+    根据不同的支付方式处理收款
+    """
+    supported_methods = ["alipay", "wechat", "credit_card", "paypal"]
+    
+    if payment_method not in supported_methods:
+        return {
+            "success": False,
+            "message": f"支付失败：系统不支持 '{payment_method}' 支付方式。"
+        }
+    
+    if payment_method == "alipay":
+        msg = f"已跳转至支付宝，成功扣款 {amount} 元。"
+    elif payment_method == "wechat":
+        msg = f"微信支付成功，已扣款 {amount} 元。"
+    elif payment_method == "credit_card":
+        msg = f"信用卡验证通过，已扣款 {amount} 元。"
+    else:
+        msg = f"PayPal 支付成功，已扣款 {amount} 元。"
+
+    return {"success": True, "message": msg}
