@@ -1,0 +1,8 @@
+def verify_user_identity(user_id):
+    """
+    检查用户是否已登录或提供有效 ID
+    """
+    if not user_id or user_id.strip() == "":
+        return False
+    # 实际项目中这里会校验 Token 或查数据库
+    return True
