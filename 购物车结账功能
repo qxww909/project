@@ -1,0 +1,77 @@
+
+def calculate_final_total(total, customer_type="adult", coupon_amount=0):
+    """
+    计算顾客的最终结账金额。
+    
+    参数 (Parameters):
+    total (float): 购买商品的原价总额
+    customer_type (str): 顾客身份类型，默认为 "adult"（成人），可选 "student"（学生）, "child"（儿童）, "senior"（老人）
+    coupon_amount (float): 优惠券抵扣金额，默认为 0
+    
+    返回 (Returns):
+    float: 最终需要支付的金额（保留两位小数）
+    """
+    
+    # 1. 安全性校验：如果原价总额小于等于0，直接返回0，防止后续计算出负数金额
+    if total <= 0:
+        return 0.0
+
+    # 2. 根据顾客身份计算对应的折扣率 (Discount rate)
+    discount_rate = 0.0  # 初始化折扣率为 0（即原价）
+    
+    # 判断身份并赋予对应的折扣率
+    if customer_type == "student":
+        discount_rate = 0.10  # 学生享受 10% 的折扣 (打9折)
+    elif customer_type == "child":
+        discount_rate = 0.20  # 儿童享受 20% 的折扣 (打8折)
+    elif customer_type == "senior":
+        discount_rate = 0.15  # 老年人享受 15% 的折扣 (打85折)
+        
+    # 计算打折后的商品价格：原价 * (1 - 折扣率)
+    # 例如：100 * (1 - 0.10) = 90
+    discounted_total = total * (1 - discount_rate)
+
+    # 3. 应用优惠券抵扣 (如果有使用优惠券)
+    if coupon_amount > 0:
+        discounted_total -= coupon_amount  # 在折后价格的基础上减去优惠券金额
+
+    # 保护机制：如果优惠券金额过大，抵扣后商品总价变负数，则强制归零
+    if discounted_total < 0:
+        discounted_total = 0
+
+    # 4. 计算运费 (Shipping fee)
+    # 业务规则：打完折后的价格如果大于0且不满 99 元，需要收取 10 元运费；满 99 元包邮
+    shipping_fee = 0.0
+    if 0 < discounted_total < 99:
+        shipping_fee = 10.0
+
+    # 5. 计算最终总价 = 商品折后价 + 运费
+    final_total = discounted_total + shipping_fee
+    
+    # 使用 round() 函数将最终金额四舍五入，保留两位小数
+    return round(final_total, 2)
+
+
+# ==============================================================================
+# 测试用例区 (Test Cases) - 用于验证功能是否正确
+# 运行此文件时，以下代码会自动执行并打印结果
+# ==============================================================================
+if __name__ == "__main__":
+    print("----- 开始运行结账系统测试 -----")
+    
+    # 案例 1：学生购买 200 元商品。
+    # 逻辑：200 * 0.9 = 180 元。因为 180 > 99，所以包邮。
+    # 预期输出：180.0
+    print("1. 学生买200元商品: ", calculate_final_total(200, "student"))
+    
+    # 案例 2：成人购买 50 元商品。
+    # 逻辑：无折扣，原价 50。因为 50 < 99，需加 10 元运费。
+    # 预期输出：60.0
+    print("2. 成人买50元商品: ", calculate_final_total(50, "adult"))
+    
+    # 案例 3：儿童购买 100 元商品，并使用 20 元优惠券。
+    # 逻辑：100 * 0.8 = 80 元。80 - 20 = 60 元。因为 60 < 99，需加 10 元运费。
+    # 预期输出：70.0
+    print("3. 儿童买100元用20元券: ", calculate_final_total(100, "child", 20))
+
+    print("----- 测试结束 -----")
