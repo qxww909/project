@@ -33,7 +33,7 @@ Python 3.6 或更高版本
 克隆本仓库到本地（或直接在 GitHub Codespaces 中打开）：
 
 bash
-git clone https://github.com/你的用户名/你的仓库名.git
+[git clone(https://github.com/qxww909/project.git)]
 进入项目目录并运行主程序：
 
 bash
